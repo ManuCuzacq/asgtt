@@ -1,0 +1,41 @@
+services:
+  articles_manager:
+        class: Manu\AsgttBundle\Managers\ArticlesManager
+        arguments: ["@doctrine", "@logger", "@service_container"]
+        
+  managers_manager:
+        class: Manu\AsgttBundle\Managers\ManagersManager
+        arguments: ["@doctrine", "@templating", "@logger", "@service_container"]
+        
+  doi_manager:
+        class: Manu\AsgttBundle\Managers\DOIManager
+        arguments: ["@service_container",  "@doctrine", "@templating", "@logger"]
+    
+  liste_manager:
+        class: Manu\AsgttBundle\Managers\ListeManager
+        arguments: ["@doctrine", "@templating", "@logger", "@service_container"]
+    
+  reporting_manager:
+        class: Manu\AsgttBundle\Managers\ReportingManager
+        arguments: ["@doctrine", "@templating", "@logger", "@service_container"]
+        
+  configuration_liste_manager:
+        class: Manu\AsgttBundle\Managers\ConfigurationListeManager
+        arguments: ["@doctrine", "@logger", "@service_container"]
+        
+        
+  users_manager:
+        class: Manu\AsgttBundle\Managers\UsersManager
+        arguments: ["@doctrine", "@logger", "@service_container"]
+        
+  adresses_manager:
+        class: Manu\AsgttBundle\Managers\AdressesManager
+        arguments: ["@doctrine", "@logger", "@service_container"]
+        
+  categories_manager:
+        class: Manu\AsgttBundle\Managers\CategoriesManager
+        arguments: ["@doctrine", "@logger", "@service_container"]
+        
+  joueurs_manager:
+        class: Manu\AsgttBundle\Managers\JoueursManager
+        arguments: ["@doctrine", "@logger", "@service_container"]

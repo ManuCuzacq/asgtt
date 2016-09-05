@@ -1,0 +1,181 @@
+@media (max-width: 768px) {
+    ._livlabel {
+        float: right!important;
+        width: 46%!important;
+        text-align: right!important;
+    }
+    .collections > .collection.col-lg-4,
+    .collections > .collection.collection-homme.col-lg-4,
+    .collections > .collection.collection-femme.col-lg-4,
+    .collections > .collection.collection-enfant.col-lg-4 {
+        height: 300px;
+    }
+    .collection-homme > div,
+    .collection-femme > div,
+    .collection-enfant > div {
+        height: inherit;
+        background-size: contain;
+        background-position-x: 50%;
+    }
+    .homme .page_catalogue,
+    .femme .page_catalogue,
+    .enfant .page_catalogue,
+    .drap-de-plage .page_catalogue,
+    .feria .page_catalogue {
+        max-height: inherit;
+    }
+    .compte .page_connexion_container {
+        min-height: 598px;
+    }
+    .main_menu > li > .submenu {
+        top: 8px;
+        right: -20px;
+    }
+    .article .block_photos {
+        margin-left: 2px;
+        margin-right: 2px;
+    }
+    .detail_article > div {
+        padding: 5px;
+        white-space: normal;
+    }
+    .fil_ariane {
+        padding-left: 10px;
+    }
+    .detail_article {
+        padding:15px!important;
+        padding-left: 0px!important;
+        margin-top: 28px;
+    }
+    .article {
+        padding-right: 0;
+       padding-left: 0px;
+    }
+    .panier {
+        margin-left: 8px;
+        margin-right: 13px;
+    }
+    .command-button {
+        width: 100%;
+    }
+    .panier> div > table > tbody > tr > td > input {
+        margin-left:3px;
+    }
+    .apercu-article {
+        min-height: auto;
+    }
+    .searchlist, .searchlistCmd {
+        display: block;
+        height: 300px;
+        margin-bottom: 50px;
+        overflow: auto;
+    }
+
+    .cmdresult {
+        height: 500px;
+        overflow: auto;
+    }
+    .cmdresult h3,
+    .cmdresult .download_facture {
+        margin-left: 15px;
+    }
+    .cmdresult .infos_commande,
+    .cmdresult .table_recap {
+        margin:30px
+    }
+
+    .pictos_bar span.picto_paiment,
+    span.picto_satisfait,
+    span.picto_service,
+    span.picto_livraison,
+    {
+        background-size: 93%!important;
+
+    }
+    .pictos_bar .paiement,
+    .pictos_bar .satisfait,
+    .pictos_bar .service_client,
+    .pictos_bar .livraison,
+    {
+        padding:0px!important
+
+    }
+
+    .cmd-result {
+        height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        margin: 0;
+    }
+    .cmd-result .table_recap img {display:none}
+
+    .cmd-result .table_recap {
+        table-layout: fixed;
+        word-wrap: break-word;
+        width: auto;
+    }
+
+    .liste_commandes {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    .liste_commandes .title {
+        margin-left: 15px;
+    }
+
+    .infos_commande > div {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .selectable_article {
+        padding-top: 118%;
+    }
+
+    .detail_infos_panier_recap {
+        margin-left: 20px;
+    }
+    .commande .recap .content div {
+        padding-top: 3px;
+        padding-bottom: 0;
+    }
+    .navbar-custom .navbar-nav > li.panier a.panier_button {
+        margin-top:0px!important
+    }
+    .panier h1 {
+        margin-left:20px;
+    }
+    .panier.container-fluid {
+        padding-right: 4px;
+    }
+    form > div#form > div {
+        padding-left:90px
+    }
+    .filtre { padding-left: 13%;}
+}
+
+@media (max-width: 768px) {
+    .cmd-result .content_compte  {
+        margin: 0px !important;
+    }
+}
+
+.infos_commande {
+    padding-right: 41px;
+}
+
+
+.infos_commande ._val {float:right}
+.content_commande {
+    margin-left: 20px;
+}
+.liste_commandes .prixTotal {float:none}
+
+._livlabel{
+    width: 50%;
+    display: inline-block;
+}
+.page_compte h3 {
+    color:#44b9c8
+}
+
+.infos_commande {color:gray}

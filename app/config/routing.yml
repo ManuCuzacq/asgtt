@@ -1,0 +1,7 @@
+manu_user:
+    resource: "@ManuUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
+manu_asgtt:
+    resource: "@ManuAsgttBundle/Resources/config/routing.yml"
+    prefix:   /
