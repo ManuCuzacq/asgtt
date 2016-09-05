@@ -12,7 +12,7 @@
 <meta name="Reply-to" content="ecuzacq22@gmail.com" />
   
   <title>AS Geaune TT</title>
-    
+        	 
   {% javascripts '@ManuAsgttBundle/Resources/public/js/*.js' %}
     <script src="{{ asset_url }}"></script>
   {% endjavascripts %}
@@ -24,6 +24,8 @@
   {% javascripts '@ManuAsgttBundle/Resources/public/js/seriel/*.js'  %}
     <script src="{{ asset_url }}"></script>
   {% endjavascripts %}
+  
+  <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
  
    
   {% stylesheets '@ManuAsgttBundle/Resources/public/bootstrap/css/*.css' filter='cssrewrite' %}
@@ -33,7 +35,10 @@
   {% stylesheets '@ManuAsgttBundle/Resources/public/css/*.css' filter='cssrewrite' %}
   	<link rel="stylesheet" href="{{ asset_url }}" />
   {% endstylesheets %} 
+  
+
   	
+ 	
   	<script language="javascript">
 		//var panierWidget = {};
 		$(document).ready(function() {
@@ -43,7 +48,7 @@
     		//panier();
     
    		 //$('body').bind('click', unActiveCurrentWidget);
-
+			
    		// $('.admin_login').ser_adminLogin();
 
 
@@ -194,6 +199,8 @@
  	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 footer">
  		&nbsp;
  	</div>
+ 	
+ 	<script> CKEDITOR.replace( 'editor1' );</script>
  </div>
 
   </body>
