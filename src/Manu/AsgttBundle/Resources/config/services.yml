@@ -1,4 +1,10 @@
 services:
+  manu.twig.asgtt_extension:
+        class: Manu\AsgttBundle\Twig\ASGTTExtension
+        arguments:  ["@request_stack","@service_container"]
+        tags:
+            - { name: twig.extension }
+            
   articles_manager:
         class: Manu\AsgttBundle\Managers\ArticlesManager
         arguments: ["@doctrine", "@logger", "@service_container"]
@@ -39,3 +45,15 @@ services:
   joueurs_manager:
         class: Manu\AsgttBundle\Managers\JoueursManager
         arguments: ["@doctrine", "@logger", "@service_container"]
+        
+  admins_manager:
+        class: Manu\AsgttBundle\Managers\AdministratorsManager
+        arguments: ["@doctrine", "@logger", "@service_container"]
+  
+  pages_manager:
+        class: Manu\AsgttBundle\Managers\PagesManager
+        arguments: ["@doctrine", "@logger", "@service_container"]
+        
+  security_manager:
+        class: Manu\AsgttBundle\Managers\SecurityManager
+        arguments: ["@service_container", "@doctrine", "@templating", "@logger"]

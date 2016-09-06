@@ -174,7 +174,6 @@ $.widget('seriel.hashcontrol', {
 		 } catch (err) {
 		 console.log('ERREUR : '+err);
 		 }
-
 		 try {
 		 checkBandeauAnalytics();
 		 } catch (err) {
@@ -208,7 +207,421 @@ function hc() {
 
     return serHC;
 }
+/*
+ * Toastr
+ * Copyright 2012-2015
+ * Authors: John Papa, Hans FjÃ¤llemark, and Tim Ferrell.
+ * All Rights Reserved.
+ * Use, reproduction, distribution, and modification of this code is subject to the terms and
+ * conditions of the MIT license, available at http://www.opensource.org/licenses/mit-license.php
+ *
+ * ARIA Support: Greta Krafsig
+ *
+ * Project: https://github.com/CodeSeven/toastr
+ */
+/* global define */
+; (function (define) {
+    define(['jquery'], function ($) {
+        return (function () {
+            var $container;
+            var listener;
+            var toastId = 0;
+            var toastType = {
+                error: 'error',
+                info: 'info',
+                success: 'success',
+                warning: 'warning'
+            };
 
+            var toastr = {
+                clear: clear,
+                remove: remove,
+                error: error,
+                getContainer: getContainer,
+                info: info,
+                options: {},
+                subscribe: subscribe,
+                success: success,
+                version: '2.1.1',
+                warning: warning
+            };
+
+            var previousToast;
+
+            return toastr;
+
+            ////////////////
+
+            function error(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.error,
+                    iconClass: getOptions().iconClasses.error,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function getContainer(options, create) {
+                if (!options) { options = getOptions(); }
+                $container = $('#' + options.containerId);
+                if ($container.length) {
+                    return $container;
+                }
+                if (create) {
+                    $container = createContainer(options);
+                }
+                return $container;
+            }
+
+            function info(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.info,
+                    iconClass: getOptions().iconClasses.info,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function subscribe(callback) {
+                listener = callback;
+            }
+
+            function success(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.success,
+                    iconClass: getOptions().iconClasses.success,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function warning(message, title, optionsOverride) {
+                return notify({
+                    type: toastType.warning,
+                    iconClass: getOptions().iconClasses.warning,
+                    message: message,
+                    optionsOverride: optionsOverride,
+                    title: title
+                });
+            }
+
+            function clear($toastElement, clearOptions) {
+                var options = getOptions();
+                if (!$container) { getContainer(options); }
+                if (!clearToast($toastElement, options, clearOptions)) {
+                    clearContainer(options);
+                }
+            }
+
+            function remove($toastElement) {
+                var options = getOptions();
+                if (!$container) { getContainer(options); }
+                if ($toastElement && $(':focus', $toastElement).length === 0) {
+                    removeToast($toastElement);
+                    return;
+                }
+                if ($container.children().length) {
+                    $container.remove();
+                }
+            }
+
+            // internal functions
+
+            function clearContainer (options) {
+                var toastsToClear = $container.children();
+                for (var i = toastsToClear.length - 1; i >= 0; i--) {
+                    clearToast($(toastsToClear[i]), options);
+                }
+            }
+
+            function clearToast ($toastElement, options, clearOptions) {
+                var force = clearOptions && clearOptions.force ? clearOptions.force : false;
+                if ($toastElement && (force || $(':focus', $toastElement).length === 0)) {
+                    $toastElement[options.hideMethod]({
+                        duration: options.hideDuration,
+                        easing: options.hideEasing,
+                        complete: function () { removeToast($toastElement); }
+                    });
+                    return true;
+                }
+                return false;
+            }
+
+            function createContainer(options) {
+                $container = $('<div/>')
+                    .attr('id', options.containerId)
+                    .addClass(options.positionClass)
+                    .attr('aria-live', 'polite')
+                    .attr('role', 'alert');
+
+                $container.appendTo($(options.target));
+                return $container;
+            }
+
+            function getDefaults() {
+                return {
+                    tapToDismiss: true,
+                    toastClass: 'toast',
+                    containerId: 'toast-container',
+                    debug: false,
+
+                    showMethod: 'fadeIn', //fadeIn, slideDown, and show are built into jQuery
+                    showDuration: 300,
+                    showEasing: 'swing', //swing and linear are built into jQuery
+                    onShown: undefined,
+                    hideMethod: 'fadeOut',
+                    hideDuration: 1000,
+                    hideEasing: 'swing',
+                    onHidden: undefined,
+
+                    extendedTimeOut: 1000,
+                    iconClasses: {
+                        error: 'toast-error',
+                        info: 'toast-info',
+                        success: 'toast-success',
+                        warning: 'toast-warning'
+                    },
+                    iconClass: 'toast-info',
+                    positionClass: 'toast-top-right',
+                    timeOut: 5000, // Set timeOut and extendedTimeOut to 0 to make it sticky
+                    titleClass: 'toast-title',
+                    messageClass: 'toast-message',
+                    target: 'body',
+                    closeHtml: '<button type="button">&times;</button>',
+                    newestOnTop: true,
+                    preventDuplicates: false,
+                    progressBar: false
+                };
+            }
+
+            function publish(args) {
+                if (!listener) { return; }
+                listener(args);
+            }
+
+            function notify(map) {
+                var options = getOptions();
+                var iconClass = map.iconClass || options.iconClass;
+
+                if (typeof (map.optionsOverride) !== 'undefined') {
+                    options = $.extend(options, map.optionsOverride);
+                    iconClass = map.optionsOverride.iconClass || iconClass;
+                }
+
+                if (shouldExit(options, map)) { return; }
+
+                toastId++;
+
+                $container = getContainer(options, true);
+
+                var intervalId = null;
+                var $toastElement = $('<div/>');
+                var $titleElement = $('<div/>');
+                var $messageElement = $('<div/>');
+                var $progressElement = $('<div/>');
+                var $closeElement = $(options.closeHtml);
+                var progressBar = {
+                    intervalId: null,
+                    hideEta: null,
+                    maxHideTime: null
+                };
+                var response = {
+                    toastId: toastId,
+                    state: 'visible',
+                    startTime: new Date(),
+                    options: options,
+                    map: map
+                };
+
+                personalizeToast();
+
+                displayToast();
+
+                handleEvents();
+
+                publish(response);
+
+                if (options.debug && console) {
+                    console.log(response);
+                }
+
+                return $toastElement;
+
+                function personalizeToast() {
+                    setIcon();
+                    setTitle();
+                    setMessage();
+                    setCloseButton();
+                    setProgressBar();
+                    setSequence();
+                }
+
+                function handleEvents() {
+                    $toastElement.hover(stickAround, delayedHideToast);
+                    if (!options.onclick && options.tapToDismiss) {
+                        $toastElement.click(hideToast);
+                    }
+
+                    if (options.closeButton && $closeElement) {
+                        $closeElement.click(function (event) {
+                            if (event.stopPropagation) {
+                                event.stopPropagation();
+                            } else if (event.cancelBubble !== undefined && event.cancelBubble !== true) {
+                                event.cancelBubble = true;
+                            }
+                            hideToast(true);
+                        });
+                    }
+
+                    if (options.onclick) {
+                        $toastElement.click(function () {
+                            options.onclick();
+                            hideToast();
+                        });
+                    }
+                }
+
+                function displayToast() {
+                    $toastElement.hide();
+
+                    $toastElement[options.showMethod](
+                        {duration: options.showDuration, easing: options.showEasing, complete: options.onShown}
+                    );
+
+                    if (options.timeOut > 0) {
+                        intervalId = setTimeout(hideToast, options.timeOut);
+                        progressBar.maxHideTime = parseFloat(options.timeOut);
+                        progressBar.hideEta = new Date().getTime() + progressBar.maxHideTime;
+                        if (options.progressBar) {
+                            progressBar.intervalId = setInterval(updateProgress, 10);
+                        }
+                    }
+                }
+
+                function setIcon() {
+                    if (map.iconClass) {
+                        $toastElement.addClass(options.toastClass).addClass(iconClass);
+                    }
+                }
+
+                function setSequence() {
+                    if (options.newestOnTop) {
+                        $container.prepend($toastElement);
+                    } else {
+                        $container.append($toastElement);
+                    }
+                }
+
+                function setTitle() {
+                    if (map.title) {
+                        $titleElement.append(map.title).addClass(options.titleClass);
+                        $toastElement.append($titleElement);
+                    }
+                }
+
+                function setMessage() {
+                    if (map.message) {
+                        $messageElement.append(map.message).addClass(options.messageClass);
+                        $toastElement.append($messageElement);
+                    }
+                }
+
+                function setCloseButton() {
+                    if (options.closeButton) {
+                        $closeElement.addClass('toast-close-button').attr('role', 'button');
+                        $toastElement.prepend($closeElement);
+                    }
+                }
+
+                function setProgressBar() {
+                    if (options.progressBar) {
+                        $progressElement.addClass('toast-progress');
+                        $toastElement.prepend($progressElement);
+                    }
+                }
+
+                function shouldExit(options, map) {
+                    if (options.preventDuplicates) {
+                        if (map.message === previousToast) {
+                            return true;
+                        } else {
+                            previousToast = map.message;
+                        }
+                    }
+                    return false;
+                }
+
+                function hideToast(override) {
+                    if ($(':focus', $toastElement).length && !override) {
+                        return;
+                    }
+                    clearTimeout(progressBar.intervalId);
+                    return $toastElement[options.hideMethod]({
+                        duration: options.hideDuration,
+                        easing: options.hideEasing,
+                        complete: function () {
+                            removeToast($toastElement);
+                            if (options.onHidden && response.state !== 'hidden') {
+                                options.onHidden();
+                            }
+                            response.state = 'hidden';
+                            response.endTime = new Date();
+                            publish(response);
+                        }
+                    });
+                }
+
+                function delayedHideToast() {
+                    if (options.timeOut > 0 || options.extendedTimeOut > 0) {
+                        intervalId = setTimeout(hideToast, options.extendedTimeOut);
+                        progressBar.maxHideTime = parseFloat(options.extendedTimeOut);
+                        progressBar.hideEta = new Date().getTime() + progressBar.maxHideTime;
+                    }
+                }
+
+                function stickAround() {
+                    clearTimeout(intervalId);
+                    progressBar.hideEta = 0;
+                    $toastElement.stop(true, true)[options.showMethod](
+                        {duration: options.showDuration, easing: options.showEasing}
+                    );
+                }
+
+                function updateProgress() {
+                    var percentage = ((progressBar.hideEta - (new Date().getTime())) / progressBar.maxHideTime) * 100;
+                    $progressElement.width(percentage + '%');
+                }
+            }
+
+            function getOptions() {
+                return $.extend({}, getDefaults(), toastr.options);
+            }
+
+            function removeToast($toastElement) {
+                if (!$container) { $container = getContainer(); }
+                if ($toastElement.is(':visible')) {
+                    return;
+                }
+                $toastElement.remove();
+                $toastElement = null;
+                if ($container.children().length === 0) {
+                    $container.remove();
+                    previousToast = undefined;
+                }
+            }
+
+        })();
+    });
+}(typeof define === 'function' && define.amd ? define : function (deps, factory) {
+    if (typeof module !== 'undefined' && module.exports) { //Node
+        module.exports = factory(require('jquery'));
+    } else {
+        window['toastr'] = factory(window['jQuery']);
+    }
+}));
 $.widget('seriel.imgloader', {
 	_create: function() {
 		this.options.stack.css({'position': 'fixed', 'top': '0', 'left': '0', 'width': '0', 'height': '0', 'overflow': 'hidden', 'visibility': 'hidden'});
@@ -466,7 +879,6 @@ function imgLoader() {
 	
 	return imgloader;
 }
-
 var serielSM = null;
 var serielPanier = null;
 var serielCatalogue = null;
@@ -475,7 +887,7 @@ var is_dev = false;
 var devInit = false;
 function isDev() {
 	if (devInit == false) {
-		if (strpos(document.location.href, 'app_dev.php') > 0) {
+		if ( document.location.href.indexOf('app_dev.php') > 0) {
 			is_dev = true;
 		}
 		devInit = true;
@@ -1071,10 +1483,7 @@ $.widget('seriel.siteManager',{
 						$('body').removeClass(cl);
 					}
 				}
-				// $('body').removeClass();
-				// alert('test 1');
 				$('body').addClass(label);
-				// alert('test 2');
 
 				this.navigate(label);
 			}
@@ -1106,7 +1515,9 @@ $.widget('seriel.siteManager',{
 				}
 			}
 		}
-
+		
+		
+		
 		var tab = label.split('/');
 		
 		if(first == 'compteur'){
@@ -1115,79 +1526,92 @@ $.widget('seriel.siteManager',{
 			
 		}else if (first == 'photos'){
 			
-		}else if (first == 'tradi'){
+		}else if (first == 'tradi' || first == 'promo'){ // se sont les pages joueurs
+				
+
+		}else if (first == 'maire' || first == 'entrainements' || first == 'bureau' ){  //se sont les pages fixes
 			
-		}else if (first == 'promo'){
+			if(!second){
+				
+				$.post(getUrlPrefix() + '/page/'+ first.toLowerCase(), $.proxy(this.pageLoaded, this));
+			}else{
 			
-		}else if (first == 'entrainements'){
+				if(first == 'maire'){
+					var content = CKEDITOR.instances.editor_maire.getData();
+				}else if(first == 'bureau'){
+					var content = CKEDITOR.instances.editor_bureau.getData();
+				}else if (first == 'entrainements'){
+					var content = CKEDITOR.instances.editor_entrainements.getData();
+				}
+	
+				var datas = {'content':content};
+				
+				$.post(getUrlPrefix() + '/page/'+ first.toLowerCase()+'/save',datas, $.proxy(this.pageSaved, this));
+			}
 			
-		}else if (first == 'maire'){
-			
-		}else if (first == 'bureau'){
 			
 		}else if (first == 'membres'){
 			
 		}
 	},
-	menuAdminLoaded : function(result) {
-
+	setLoading : function() {
+		this.element.addClass('loading');
 	},
-	listeFraisLivraisonLoaded : function() {
-		$('#content_compte', this.element).fraisLivraison();
-		$('#content_compte', this.element).fraisLivraison(
-				"init");
+	hideLoading: function() {
+		this.element.removeClass('loading');
 	},
-	infosLoaded : function() {
-		$('#content_compte', this.element).editInfoPerso();
+	getTypeUser: function(){
+		return $('.user > .type-user',this.element).html();
 	},
-	listeCommandesLoaded : function() {
-		$('#content_compte', this.element).listesCommandes();
-		$('#content_compte', this.element).listesCommandes(
-				'init');
-		console.log('commandes loaded');
-		// return;
+	isAdmin : function(){
+		var type_user = 'ANON';
+		type_user = this.getTypeUser().trim();
+		if(type_user == "ADMIN")return true;
+		return false;
 	},
-	listeAvoirsLoaded : function() {
-		console.log('avoirs loaded');
-		// return;
+	isJoueur : function(){
+		var type_user = 'ANON';
+		type_user = this.getTypeUser().trim();
+		if(type_user == "JOUEUR")return true;
+		return false;
 	},
-	adressesLoaded : function() {
-		$('#content_compte', this.element).editAdresses();
+	pageLoaded: function(result){
+		var res = $(result);
+		var nom = '';
+		
+		if (res.hasClass('success')){
+			var code = $('<div></div>');
+			content = $('.content',res);
+			var text = content.text();
+			
+			nom = $('.nom',res).html().trim();
+			if(this.isAdmin()){
+				
+				if(nom == 'maire'){
+					CKEDITOR.instances.editor_maire.setData(text);
+				}else if( nom == "bureau"){
+					CKEDITOR.instances.editor_bureau.setData(text);
+				}else if ( nom == "entrainements"){
+					CKEDITOR.instances.editor_entrainements.setData(text);
+				}
+				
+			}else{
+				$('.page_'+nom+' > .content',this.element).html(text);
+			}
+			
+		}
+		this.hideLoading();
 	},
-	detailCommande : function() {
-		// return
-	},
-	contactLoaded : function() {
-		$('.page_contact', this.element).pageContact();
-	},
-	formAccountLoaded : function() {
-		// à voir car je ne comprend pas le truc...
-		// $(".page_compte").css("opacity","1");
-		// $(".page_compte").css("max-height",($(document).height())+"px")
-		$("body").addClass("compte");
-		// .......................................
-		$('#register', this.element).css('display', 'block');
-		$('.page_connexion_container').css('display', 'none');
-		$('#register').addAccount();
-	},
-	formCommandeLoaded : function() {
-		$('.page_commande > div.container-fluid').commande();
-	},
-	formCommandeLivraisonLoaded : function() {
-		$('.page_commande > div.container-fluid').commande(
-				'showStep2');
-	},
-	formCommandePaiementLoaded : function() {
-		$('.page_commande > div.container-fluid').commande(
-				'showStep3');
-	},
-	loginClientLoaded : function() {
-		$('.page_compte .page_connexion_container')
-				.ser_clientLogin();
-		// $('#login_client').ser_clientLogin();
-	},
-	loginAdminLoaded : function() {
-		$('#admin_login_block > .admin').ser_adminLogin();
+	pageSaved : function(result){
+		var res = $(result);
+		
+		var nom = $('.nom',res).html();
+		
+		if(res.hasClass="success"){
+			document.location.href = '#'+nom;
+		}
+		
+		toastr['error']('test');
 	},
 	afficherContenu : function(result) {
 		var res = $(result);
@@ -1214,75 +1638,6 @@ $.widget('seriel.siteManager',{
 		}
 
 		cat().updateContent(res.html());
-
-		/*
-		 * $('.catalogue',this.element).html(res.html());
-		 * $('.catalogue',this.element).removeClass('loading');
-		 */
-
-	},
-	afficherFicheArticle : function(result) {
-		// $('.slider',this.element).hide();
-		var res = $(result);
-
-		$('.catalogue', this.element).html(res);
-		$('.catalogue > div', this.element).ficheArticle();
-
-		$('.catalogue', this.element).removeClass('loading');
-
-	},
-	afficherPanier : function(result) {
-		var res = $(result); // on a le bon resultat
-
-		$('.page_panier', this.element).html(res);
-		$('.page_panier .panier', this.element).pagePanier();
-		$('.panier', this.element).removeClass('loading');
-	},
-	/*
-	 * afficherCompte: function(result) {
-	 * //$('.slider',this.element).hide(); alert('test'); var
-	 * res = $(result); $('#register',this.element).html(res);
-	 * $('#register',this.element).css('display','block');
-	 * 
-	 * $('.page_compte',this.element).pageCompte(); },
-	 */
-
-	showSubMenu : function(page) {
-		$("#header > .header_bottom > .submenu").hide();
-		$("#header > .header_bottom .submenu ul li")
-				.removeClass("selected");
-		// show/hide submenu bg
-		if ($("#header > .header_bottom > .submenu > ul[rel='"
-				+ page + "']").length > 0)
-			$("#header > .header_bottom > .submenu_bg").show();
-		else
-			$("#header > .header_bottom > .submenu_bg").hide();
-		// show/hide submenu
-		$(
-				"#header > .header_bottom > .submenu > ul[rel='"
-						+ page + "']").parent().show();
-		// if a submenu is selected
-		if ($("#header > .header_bottom > .submenu > ul > li > a[href='#"
-				+ page + "']").length > 0) {
-			// show bg
-			$("#header > .header_bottom > .submenu_bg").show();
-			// show submenu on loading
-			$(
-					"#header > .header_bottom > .submenu > ul > li > a[href='#"
-							+ page + "']").closest(".submenu")
-					.show();
-			// add class selected on li parent and child
-			$(
-					"#header > .header_bottom > .submenu > ul > li > a[href='#"
-							+ page + "']").parent().addClass(
-					"selected");
-			var rel = $(
-					"#header > .header_bottom > .submenu > ul > li > a[href='#"
-							+ page + "']").closest("ul").attr(
-					"rel");
-			$("#header > .header_bottom .menu ul li." + rel)
-					.addClass("selected");
-		}
 	},
 	shortenSlider : function() {
 		console.log('shortenSLider');

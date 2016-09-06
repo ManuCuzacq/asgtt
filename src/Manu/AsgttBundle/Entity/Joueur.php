@@ -4,6 +4,7 @@ namespace Manu\AsgttBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Manu\AsgttBundle\Annotation as SER;
+use Manu\AsgttBundle\Entity\Categorie;
 
 /**
  * @ORM\Entity
@@ -70,8 +71,9 @@ class Joueur extends RootObject
 	protected $pointMensuel;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="Manu\AsgttBundle\Entity\Categorie",mappedBy="categorie")
-	 **/
+	 * @ORM\ManyToOne(targetEntity="Categorie")
+	 * @ORM\JoinColumn()
+	 */
 	protected $categorie;
 	
 	

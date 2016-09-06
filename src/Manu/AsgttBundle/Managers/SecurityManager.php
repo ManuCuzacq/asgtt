@@ -1,17 +1,19 @@
 <?php
 
-namespace Seriel\CultureSudBundle\Managers;
+namespace Manu\AsgttBundle\Managers;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use P2\Bundle\RatchetBundle\WebSocket\Client\ClientProviderInterface;
 use P2\Bundle\RatchetBundle\WebSocket\Client\ClientInterface;
 use Symfony\Component\Security\Core\SecurityContext;
-use Seriel\AppliToolboxBundle\Managers\SerielManager;
+use Manu\AsgttBundle\Managers\SerielManager;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Seriel\CultureSudBundle\Entity\Client;
-use Seriel\CultureSudBundle\Entity\Administrator;
+
+use Manu\AsgttBundle\Managers\JoueursManager;
+use Manu\AsgttBundle\Managers\AdministratorsManager;
+use Manu;
 
 class SecurityManager implements ClientProviderInterface {
 	
@@ -61,10 +63,10 @@ class SecurityManager implements ClientProviderInterface {
 	public function getCurrentIndividu() {
 		$user = $this->getCurrentUser();
 		if ($user && !is_string($user)) {
-			$clientsMgr = $this->container->get('clients_manager');
-			if (false) $clientsMgr = new ClientsManager();
+			$clientsMgr = $this->container->get('joueurs_manager');
+			if (false) $clientsMgr = new JoueursManager();
 			
-			$client = $clientsMgr->getClientForUser($user->getId());
+			$client = $clientsMgr->getJoueurForUser($user->getId());
 			if ($client) return $client;
 			
 			$adminsMgr = $this->container->get('admins_manager');
@@ -77,19 +79,18 @@ class SecurityManager implements ClientProviderInterface {
 		return null;
 	}
 	
-	public function isClient() {
+	public function isJoueur() {
 		$currIndiv = $this->getCurrentIndividu();
-		if ($currIndiv instanceof Client) return true;
+		
+		if ($currIndiv instanceof Manu\AsgttBundle\Entity\Joueur) return true;
 		return false;
 	}
 	
 	public function isAdmin() {
 		$currIndiv = $this->getCurrentIndividu();
-		if ($currIndiv instanceof Administrator) {
-			/*$user = $this->getCurrentUser();
-			$user->addRole('ROLE_ADMIN');
-			$this->doctrine->getManager()->persist($user);
-			$this->doctrine->getManager()->flush();*/
+		
+		if ($currIndiv instanceof Manu\AsgttBundle\Entity\Administrator) {
+
 			return true;
 		}
 		return false;

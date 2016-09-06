@@ -1,6 +1,7 @@
 <?php
 namespace Manu\AsgttBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Manu\AsgttBundle\Entity\Joueur;
 
 /**
  * @ORM\Entity
@@ -19,15 +20,8 @@ class Categorie extends RootObject
 	  * @ORM\Column(type="string", length=255, unique=false, nullable=false)
 	  */
 	 protected $nom;
-	 
-	 
-	 /**
-	  * @ORM\ManyToOne(targetEntity="Joueur")
-	  * @ORM\JoinColumn(name="joueur_id", referencedColumnName="id")
-	  */
-	 protected $joueur;
-	 
-	 
+
+		 
 	 public function getId(){
 	 	return $this->id;
 	 }
@@ -52,12 +46,11 @@ class Categorie extends RootObject
      *
      * @return string
      */
-    public function getAddr1()
+    public function getNom()
     {
-        return $this->addr1;
+        return $this->nom;
     }
-    
-    
+
     public function setJoueur($joueur){
     	$this->joueur = $joueur;
     	return $this;

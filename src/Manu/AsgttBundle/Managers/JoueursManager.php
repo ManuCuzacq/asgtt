@@ -19,11 +19,11 @@ class JoueursManager extends SerielManager
 	protected function buildQuery($qb, $params, $options = null) {
 		$hasParams = false;
 			
-		/*if (isset($params['nom']) and $params['nom']) {
-			$nom = $params['nom'];
-			$qb->andWhere('article.nom = :nom')->setParameter('nom', $nom);
+		if (isset($params['user_id']) and $params['user_id']) {
+			$user_id = $params['user_id'];
+			$qb->andWhere('joueur.user = :user_id')->setParameter('user_id', $user_id);
 			$hasParams = true;
-		}*/
+		}
 	
 		return $hasParams;
 	}
@@ -43,6 +43,12 @@ class JoueursManager extends SerielManager
 		$Joueurs = $this->getAll();
 
 		return $Joueurs;
+	}
+	
+	public function getJoueurForUser($user_id){
+		$params = array('user_id' => $user_id);
+	
+		return $this->query($params, array('one' => true));
 	}
 	
 }

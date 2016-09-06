@@ -19,7 +19,9 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "symfony/assetic-bundle": "^2.8",
         "friendsofsymfony/user-bundle": "~2.0@dev",
-        "coresphere/console-bundle": "^0.4.0"
+        "coresphere/console-bundle": "^0.4.0",
+        "p2/ratchet-bundle": "dev-master",
+        "liip/imagine-bundle": "*"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

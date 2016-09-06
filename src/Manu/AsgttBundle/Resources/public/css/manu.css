@@ -266,6 +266,50 @@ body {
 	margin-top: -20px;
 }
 
+.page_maire .loading,
+.page_entrainements .loading,
+.page_bureau .loading,
+.page_contact .loading,
+.page_tradi .loading,
+.page_promo .loading,
+.page_photos .loading,
+.page_compteur .loading,
+.page_membres .loading,
+.page_accueil .loading {
+	pointer-events: none;
+    cursor: default;
+	background: url(/bundles/manuasgtt/images/loader.gif) center center no-repeat;	
+}
+
+
+.page_maire .loading > * ,
+.page_entrainements .loading > * ,
+.page_bureau .loading > * ,
+.page_contact .loading > *, 
+.page_tradi .loading > * ,
+.page_promo .loading > * ,
+.page_photos .loading > * ,
+.page_compteur .loading > *, 
+.page_membres .loading > *, 
+.page_accueil .loading > * {
+	opacity: .4;
+}
+
+.page_maire .loading .button,
+.page_entrainements .loading .button,
+.page_bureau .loading .button,
+.page_contact .loading .button,
+.page_tradi .loading .button,
+.page_promo .loading .button,
+.page_photos .loading .button,
+.page_compteur .loading .button,
+.page_membres .loading .button,
+.page_accueil .loading .button{
+	visibility: hidden;
+}
+
+
+
 .page_maire,
 .page_entrainements,
 .page_bureau,

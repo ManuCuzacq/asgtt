@@ -174,7 +174,6 @@ $.widget('seriel.hashcontrol', {
 		 } catch (err) {
 		 console.log('ERREUR : '+err);
 		 }
-
 		 try {
 		 checkBandeauAnalytics();
 		 } catch (err) {

@@ -1,3 +1,11 @@
 manu_asgtt_homepage:
     path:     /
     defaults: { _controller: ManuAsgttBundle:Asgtt:index }
+    
+manu_asgtt_page:
+    path:     /page/{nom}
+    defaults: { _controller: ManuAsgttBundle:Asgtt:getPage}
+    
+manu_asgtt_page_save:
+    path:     /page/{nom}/save
+    defaults: { _controller: ManuAsgttBundle:Asgtt:savePage}

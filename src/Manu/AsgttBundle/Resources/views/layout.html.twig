@@ -12,7 +12,10 @@
 <meta name="Reply-to" content="ecuzacq22@gmail.com" />
   
   <title>AS Geaune TT</title>
-        	 
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+       
+       
   {% javascripts '@ManuAsgttBundle/Resources/public/js/*.js' %}
     <script src="{{ asset_url }}"></script>
   {% endjavascripts %}
@@ -27,7 +30,6 @@
   
   <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
  
-   
   {% stylesheets '@ManuAsgttBundle/Resources/public/bootstrap/css/*.css' filter='cssrewrite' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
   {% endstylesheets %}
@@ -57,7 +59,17 @@
   
 </head>
 <body class="accueil">
-
+<div class="user" hidden>
+	<span class="type-user">
+		{% if is_admin() %}
+			ADMIN
+		{% elseif is_joueur() %}
+			JOUEUR
+		{% else %}
+			ANON
+		{% endif %}
+	</span>
+</div>
  <div class="container-fluid page">
  	
  	<!-- cette partie sera visible sur grand ecran et remplacée par une navbar bootstrap -->
@@ -145,7 +157,9 @@
 	            <img src="/bundles/manuasgtt/images/ASGTT-Logo_page_web.png" width="100%" style="width: 100%"/>
 	             <img src="/bundles/manuasgtt/images/test.jpg" width="100%" style="width: 100%"/>
 	        </div>
-	        
+			
+			
+			        
 	        <div class="liste_articles row" >
 	 		{% if articles is defined %}
 	 			{% for article in articles %}
@@ -158,16 +172,51 @@
 	 		{% endif %}
 	 		</div>
 	 	</div>
+	 	
+	 <!-- PARTIE DES PAGES GERER EN CSS -->
+	 
 	 <div class="page_maire row">
-		page_maire
+	 	   {% if is_admin() %}
+	 	   		<textarea name="editor_maire" class="editor col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	 	   		
+	 	   		</textarea>
+	 	   		<br>
+	 	   		<button type="button" class="col-lg-2 col-md-2 col-sm-2 col-xs-2 btn" onclick="document.location.href='#maire/save'">Enregistrer</button>
+	 	   {% else %}
+	 	   		<div class="content col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	 	   			
+	 	   		</div>
+	 	   
+	 	   {% endif %}
      </div>
  	 
  	 <div class="page_entrainements row">
-		page_entrainements
+			{% if is_admin() %}
+	 	   		<textarea name="editor_entrainements" class="editor col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	 	   		
+	 	   		</textarea>
+	 	   		<br>
+	 	   		<button type="button" class="col-lg-2 col-md-2 col-sm-2 col-xs-2 btn" onclick="document.location.href='#entrainements/save'">Enregistrer</button>
+	 	   {% else %}
+	 	   		<div class="content col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	 	   			
+	 	   		</div>
+	 	   
+	 	   {% endif %}
      </div>
      
      <div class="page_bureau row">
-		page_bureau
+			{% if is_admin() %}
+	 	   		<textarea name="editor_bureau" class="editor col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	 	   		
+	 	   		</textarea>
+	 	   		<br>
+	 	   		<button type="button" class="col-lg-2 col-md-2 col-sm-2 col-xs-2 btn" onclick="document.location.href='#bureau/save'">Enregistrer</button>
+	 	   {% else %}
+	 	   		<div class="content col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	 	   			
+	 	   		</div>
+	 	   {% endif %}
      </div>
      
      <div class="page_tradi row">
@@ -194,13 +243,17 @@
 		page_membres
      </div>
  	</div>
- 	<!-- PARTIE DES PAGES GERER EN CSS -->
+ 	
  	
  	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 footer">
  		&nbsp;
  	</div>
- 	
- 	<script> CKEDITOR.replace( 'editor1' );</script>
+ 	<script>
+		
+		CKEDITOR.replace( 'editor_entrainements');
+		CKEDITOR.replace( 'editor_maire');
+		CKEDITOR.replace( 'editor_bureau');
+ 	</script>
  </div>
 
   </body>

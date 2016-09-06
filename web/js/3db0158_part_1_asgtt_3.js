@@ -6,7 +6,7 @@ var is_dev = false;
 var devInit = false;
 function isDev() {
 	if (devInit == false) {
-		if (strpos(document.location.href, 'app_dev.php') > 0) {
+		if ( document.location.href.indexOf('app_dev.php') > 0) {
 			is_dev = true;
 		}
 		devInit = true;
@@ -602,10 +602,7 @@ $.widget('seriel.siteManager',{
 						$('body').removeClass(cl);
 					}
 				}
-				// $('body').removeClass();
-				// alert('test 1');
 				$('body').addClass(label);
-				// alert('test 2');
 
 				this.navigate(label);
 			}
@@ -637,88 +634,97 @@ $.widget('seriel.siteManager',{
 				}
 			}
 		}
-
-		var tab = label.split('/');
 		
+		var tab = label.split('/');
+		alert('test');
 		if(first == 'compteur'){
 			
 		}else if (first == 'contact'){
 			
 		}else if (first == 'photos'){
 			
-		}else if (first == 'tradi'){
+		}else if (first == 'tradi' || first == 'promo'){ // se sont les pages joueurs
+				
+
+		}else if (first == 'maire' || 'first' == 'bureau' || first == 'entrainements' ){  //se sont les pages fixes
+
+			if(!second){
+				$.post(getUrlPrefix() + '/page/'+ first.toLowerCase(), $.proxy(this.pageLoaded, this));
+			}else{
+				if(first == 'maire'){
+					var content = CKEDITOR.instances.editor_maire.getData();
+				}else if(first == 'bureau'){
+					var content = CKEDITOR.instances.editor_bureau.getData();
+				}else if (first == 'entrainements'){
+					var content = CKEDITOR.instances.editor_entrainements.getData();
+				}
+	
+				var datas = {'content':content};
+				
+				$.post(getUrlPrefix() + '/page/'+ first.toLowerCase()+'/save',datas, $.proxy(this.pageSaved, this));
+			}
 			
-		}else if (first == 'promo'){
-			
-		}else if (first == 'entrainements'){
-			
-		}else if (first == 'maire'){
-			
-		}else if (first == 'bureau'){
 			
 		}else if (first == 'membres'){
 			
 		}
 	},
-	menuAdminLoaded : function(result) {
-
+	setLoading : function() {
+		this.element.addClass('loading');
 	},
-	listeFraisLivraisonLoaded : function() {
-		$('#content_compte', this.element).fraisLivraison();
-		$('#content_compte', this.element).fraisLivraison(
-				"init");
+	hideLoading: function() {
+		this.element.removeClass('loading');
 	},
-	infosLoaded : function() {
-		$('#content_compte', this.element).editInfoPerso();
+	getTypeUser: function(){
+		return $('.user > .type-user',this.element).html();
 	},
-	listeCommandesLoaded : function() {
-		$('#content_compte', this.element).listesCommandes();
-		$('#content_compte', this.element).listesCommandes(
-				'init');
-		console.log('commandes loaded');
-		// return;
+	isAdmin : function(){
+		var type_user = 'ANON';
+		type_user = this.getTypeUser().trim();
+		if(type_user == "ADMIN")return true;
+		return false;
 	},
-	listeAvoirsLoaded : function() {
-		console.log('avoirs loaded');
-		// return;
+	isJoueur : function(){
+		var type_user = 'ANON';
+		type_user = this.getTypeUser().trim();
+		if(type_user == "JOUEUR")return true;
+		return false;
 	},
-	adressesLoaded : function() {
-		$('#content_compte', this.element).editAdresses();
+	pageLoaded: function(result){
+		var res = $(result);
+		var nom = '';
+		
+		if (res.hasClass('success')){
+			var code = $('<div></div>');
+			content = $('.content',res);
+			var text = content.text();
+			
+			nom = $('.nom',res).html().trim();
+			if(this.isAdmin()){
+				
+				if(nom == 'maire'){
+					CKEDITOR.instances.editor_maire.setData(text);
+				}else if( nom == "bureau"){
+					CKEDITOR.instances.editor_bureau.setData(text);
+				}else if ( nom == "entrainements"){
+					CKEDITOR.instances.editor_entrainements.setData(text);
+				}
+				
+			}else{
+				$('.page_'+nom+' > .content',this.element).html(text);
+			}
+			
+		}
+		this.hideLoading();
 	},
-	detailCommande : function() {
-		// return
-	},
-	contactLoaded : function() {
-		$('.page_contact', this.element).pageContact();
-	},
-	formAccountLoaded : function() {
-		// à voir car je ne comprend pas le truc...
-		// $(".page_compte").css("opacity","1");
-		// $(".page_compte").css("max-height",($(document).height())+"px")
-		$("body").addClass("compte");
-		// .......................................
-		$('#register', this.element).css('display', 'block');
-		$('.page_connexion_container').css('display', 'none');
-		$('#register').addAccount();
-	},
-	formCommandeLoaded : function() {
-		$('.page_commande > div.container-fluid').commande();
-	},
-	formCommandeLivraisonLoaded : function() {
-		$('.page_commande > div.container-fluid').commande(
-				'showStep2');
-	},
-	formCommandePaiementLoaded : function() {
-		$('.page_commande > div.container-fluid').commande(
-				'showStep3');
-	},
-	loginClientLoaded : function() {
-		$('.page_compte .page_connexion_container')
-				.ser_clientLogin();
-		// $('#login_client').ser_clientLogin();
-	},
-	loginAdminLoaded : function() {
-		$('#admin_login_block > .admin').ser_adminLogin();
+	pageSaved : function(result){
+		var res = $(result);
+		
+		var nom = $('.nom',res).html();
+		
+		if(res.hasClass="success"){
+			document.location.href = '#'+nom;
+		}
 	},
 	afficherContenu : function(result) {
 		var res = $(result);
@@ -745,75 +751,6 @@ $.widget('seriel.siteManager',{
 		}
 
 		cat().updateContent(res.html());
-
-		/*
-		 * $('.catalogue',this.element).html(res.html());
-		 * $('.catalogue',this.element).removeClass('loading');
-		 */
-
-	},
-	afficherFicheArticle : function(result) {
-		// $('.slider',this.element).hide();
-		var res = $(result);
-
-		$('.catalogue', this.element).html(res);
-		$('.catalogue > div', this.element).ficheArticle();
-
-		$('.catalogue', this.element).removeClass('loading');
-
-	},
-	afficherPanier : function(result) {
-		var res = $(result); // on a le bon resultat
-
-		$('.page_panier', this.element).html(res);
-		$('.page_panier .panier', this.element).pagePanier();
-		$('.panier', this.element).removeClass('loading');
-	},
-	/*
-	 * afficherCompte: function(result) {
-	 * //$('.slider',this.element).hide(); alert('test'); var
-	 * res = $(result); $('#register',this.element).html(res);
-	 * $('#register',this.element).css('display','block');
-	 * 
-	 * $('.page_compte',this.element).pageCompte(); },
-	 */
-
-	showSubMenu : function(page) {
-		$("#header > .header_bottom > .submenu").hide();
-		$("#header > .header_bottom .submenu ul li")
-				.removeClass("selected");
-		// show/hide submenu bg
-		if ($("#header > .header_bottom > .submenu > ul[rel='"
-				+ page + "']").length > 0)
-			$("#header > .header_bottom > .submenu_bg").show();
-		else
-			$("#header > .header_bottom > .submenu_bg").hide();
-		// show/hide submenu
-		$(
-				"#header > .header_bottom > .submenu > ul[rel='"
-						+ page + "']").parent().show();
-		// if a submenu is selected
-		if ($("#header > .header_bottom > .submenu > ul > li > a[href='#"
-				+ page + "']").length > 0) {
-			// show bg
-			$("#header > .header_bottom > .submenu_bg").show();
-			// show submenu on loading
-			$(
-					"#header > .header_bottom > .submenu > ul > li > a[href='#"
-							+ page + "']").closest(".submenu")
-					.show();
-			// add class selected on li parent and child
-			$(
-					"#header > .header_bottom > .submenu > ul > li > a[href='#"
-							+ page + "']").parent().addClass(
-					"selected");
-			var rel = $(
-					"#header > .header_bottom > .submenu > ul > li > a[href='#"
-							+ page + "']").closest("ul").attr(
-					"rel");
-			$("#header > .header_bottom .menu ul li." + rel)
-					.addClass("selected");
-		}
 	},
 	shortenSlider : function() {
 		console.log('shortenSLider');
