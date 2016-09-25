@@ -11,9 +11,10 @@ use Manu\AsgttBundle\Managers\SerielManager;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
+use Manu\AsgttBundle\Entity\Administrator;
+use Manu\AsgttBundle\Entity\Joueur;
 use Manu\AsgttBundle\Managers\JoueursManager;
 use Manu\AsgttBundle\Managers\AdministratorsManager;
-use Manu;
 
 class SecurityManager implements ClientProviderInterface {
 	
@@ -82,14 +83,14 @@ class SecurityManager implements ClientProviderInterface {
 	public function isJoueur() {
 		$currIndiv = $this->getCurrentIndividu();
 		
-		if ($currIndiv instanceof Manu\AsgttBundle\Entity\Joueur) return true;
+		if ($currIndiv instanceof Joueur) return true;
 		return false;
 	}
 	
 	public function isAdmin() {
 		$currIndiv = $this->getCurrentIndividu();
 		
-		if ($currIndiv instanceof Manu\AsgttBundle\Entity\Administrator) {
+		if ($currIndiv instanceof Administrator ) {
 
 			return true;
 		}
