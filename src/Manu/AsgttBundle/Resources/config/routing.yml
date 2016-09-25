@@ -9,3 +9,15 @@ manu_asgtt_page:
 manu_asgtt_page_save:
     path:     /page/{nom}/save
     defaults: { _controller: ManuAsgttBundle:Asgtt:savePage}
+    
+manu_asgtt_modifier_article:
+    path:     /article/modifier/{id}
+    defaults: { _controller: ManuAsgttBundle:Asgtt:modifierArticle}
+    
+manu_asgtt_update_article:
+    path:     /article/update/{id}
+    defaults: { _controller: ManuAsgttBundle:Asgtt:updateArticle}
+    
+manu_asgtt_supprimer_artcle:
+    path:     /article/supprimer/{id}
+    defaults: { _controller: ManuAsgttBundle:Asgtt:supprimerArticle}

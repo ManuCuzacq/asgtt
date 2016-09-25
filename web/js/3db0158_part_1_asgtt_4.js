@@ -918,6 +918,175 @@ $.widget('seriel.modal',{
 	}
 });
 
+$.widget('manu.gestionArticles',{
+	_create : function() {
+		$('.button_update',this.element).bind('click',$.proxy(this.updateClicked,this));
+                $('.button_remove',this.element).bind('click',$.proxy(this.deleteClicked,this));
+	},
+        setLoading : function(){
+            $('body').addClass('loading');
+        },
+        hideLoading : function(){
+            $('body').removeClass('loading');
+        },
+	updateClicked: function(event){
+                this.setLoading();
+		var target = $(event.currentTarget);
+		var article_id = target.parent().parent().attr('article_id');
+		
+		$.post(getUrlPrefix() + '/article/modifier/'+article_id, $.proxy(this.article_loaded, this));
+		
+	},
+	article_loaded: function(result){
+            
+                if (CKEDITOR.instances.editor_tmp) CKEDITOR.instances.editor_tmp.destroy();
+                var res =$(result);
+		var div = $(result).html();
+                
+                $('.save_button',$(div)).bind('click',$.proxy(this.saveClicked,this));
+                $('.cancel_button',$(div)).bind('click',$.proxy(this.cancelClicked,this));
+                               
+                var article_id = $(div).attr('article_id');
+                var article = null;
+                $('.articles',this.element).each(function(){
+                    if($(this).attr('article_id') === article_id){
+                        article = $(this);
+                    }
+                });
+                this.options.article = article.html();
+                              
+                $('.button_remove',article).hide();
+                $('.button_update',this.element).hide();
+                
+               var saveButton = $('<button class="save_button btn btn-primary">Enregistrer</button>');
+               var cancelButton = $('<button class="cancel_button btn btn-danger">Annuler</button>');
+               
+                saveButton.bind('click',$.proxy(this.saveClicked,this));
+                cancelButton.bind('click',$.proxy(this.cancelClicked,this));
+                
+                article.fadeOut(function(){
+                    $(this).html($(div).html());
+                    console.log('replaced');
+                    article.fadeIn();
+                    CKEDITOR.replace( "editor_tmp" );
+                    article.append(saveButton);
+                    article.append(cancelButton);
+                });  
+                this.hideLoading();
+        },
+        saveClicked: function(event){
+             var target = $(event.currentTarget);
+             var id = target.parent().attr('article_id'); 
+             
+             var article = null;
+            $('.articles',this.element).each(function(){
+                    if($(this).attr('article_id') === id){
+                        article = $(this);
+                    }
+            });
+            
+             var titre = $('.titre_article',article).val();
+             var content = CKEDITOR.instances.editor_tmp.getData();
+             var datas = {
+                 'titre' : titre,
+                 'content': content
+             };
+             $.post(getUrlPrefix() + '/article/update/'+id,datas, $.proxy(this.article_updated, this));
+        },
+        article_updated: function(result){
+            var res = $(result);
+            var new_article = $('.articles',res);
+            var article_id = $('.articles',res).attr('article_id');
+            
+            
+            var article = null;
+            $('.articles',this.element).each(function(){
+                    if($(this).attr('article_id') === article_id){
+                        article = $(this);
+                    }
+            });
+            
+            $(article).html(new_article.html());
+            
+            
+            $('.button_update',this.element).show();
+            $('.button_update',article).bind('click',$.proxy(this.updateClicked,this));
+            $('.button_remove',article).bind('click',$.proxy(this.deleteClicked,this));
+            
+        },
+        cancelClicked: function(event){
+            var target = $(event.currentTarget);
+            var id = target.parent().attr('article_id');
+            var article = null;
+            $('.articles',this.element).each(function(){
+                    if($(this).attr('article_id') === id){
+                        article = $(this);
+                    }
+            });
+            
+            article.html(this.options.article);
+            $('.button_update',this.element).show();
+            $('.button_update',article).bind('click',$.proxy(this.updateClicked,this));
+            $('.button_remove',article).bind('click',$.proxy(this.deleteClicked,this));
+        },
+        articleGet: function(result){
+            
+        },
+        deleteClicked: function(event){
+                var target = $(event.currentTarget);
+		var article_id = target.parent().attr('article_id'); 
+                var modal = $('<div id="dialog-confirm" title="Confirmation de suppression de l\'article "><p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Etes-vous sur de vouloir supprimer cet article ? </p></div>');
+                this.options.modal = $(modal);
+            this.options.modal.dialog({
+                   resizable: false,
+                   height: "auto",
+                   width: 400,
+                   modal: true,
+                    buttons: [{ 
+                        text: "Oui", 
+                        click: function() { 
+                              $.ajax({
+                                 url     : getUrlPrefix() + '/article/supprimer/'+article_id,
+                                 type    : 'POST',
+                                 success : function(resp){
+                                     
+                                 var res = $(resp);
+                                 //alert(res.html());
+                                 
+                                 if(res.hasClass('success')){
+                                      var article_id = $('.article_id',res).html();
+                                        $('.articles').each(function(){
+                                            if($(this).attr('article_id') === article_id){
+                                                  $(this).remove();
+                                            }
+                                        });
+                                      $(".ui-dialog-titlebar-close").trigger('click');
+                                    
+                                } 
+                                
+                                },
+                                error   : function(resp){
+                                }
+                             });  
+                           }
+                         },
+                         {
+                             text: "Non", 
+                             click: function() { 
+                                $( this ).dialog( "close" ); 
+                            }
+                    
+                         }]                 
+
+                    }); 
+        },
+	options: {
+	    modal: null,
+            article: null,
+	}
+});
+
+
 $.widget('manu.animationHeader',{
 	_create : function() {
 		$('ul > li > a > img',this.element).bind('mouseover',$.proxy(this.hoverActivate,this));
@@ -1014,3 +1183,4 @@ $.widget('manu.animationHeader',{
 	}
 
 });
+

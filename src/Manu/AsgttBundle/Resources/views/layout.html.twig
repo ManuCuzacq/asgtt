@@ -8,10 +8,11 @@
   <meta name="googlebot" content="index, nosnippet, noarchive" />
   <meta name="Publisher" content="as geaune tennis de table" />
   <meta name="google" content="notranslate" />
-  
+  <meta name="description" content=" - Accueil, Tennis de Table, AS GEAUNE TT, GEAUNE, 40320, modifiÃ© le : 23/9/2016" />
+  <meta name="keywords" content="site, club, AS GEAUNE TT, Tennis de Table, landes, 40320, GEAUNE" />
 <meta name="Reply-to" content="ecuzacq22@gmail.com" />
   
-  <title>AS Geaune TT</title>
+  <title>Association Sportive Geaune Tennis de Table</title>
   
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
        
@@ -20,9 +21,18 @@
     <script src="{{ asset_url }}"></script>
   {% endjavascripts %}
     
-  {% javascripts '@ManuAsgttBundle/Resources/public/bootstrap/js/*.js' %}
-    <script src="{{ asset_url }}"></script>
-  {% endjavascripts %}
+  
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  
   
   {% javascripts '@ManuAsgttBundle/Resources/public/js/seriel/*.js'  %}
     <script src="{{ asset_url }}"></script>
@@ -30,14 +40,10 @@
   
   <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
  
-  {% stylesheets '@ManuAsgttBundle/Resources/public/bootstrap/css/*.css' filter='cssrewrite' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-  {% endstylesheets %}
- 
   {% stylesheets '@ManuAsgttBundle/Resources/public/css/*.css' filter='cssrewrite' %}
   	<link rel="stylesheet" href="{{ asset_url }}" />
   {% endstylesheets %} 
-  
+
 
   	
  	
@@ -47,13 +53,7 @@
     		initSerHC();
     		sm();
     		$('.main_menu').animationHeader();
-    		//panier();
-    
-   		 //$('body').bind('click', unActiveCurrentWidget);
-			
-   		// $('.admin_login').ser_adminLogin();
-
-
+    		$('.liste_articles').gestionArticles();
 });
 </script>
   
@@ -72,7 +72,7 @@
 </div>
  <div class="container-fluid page">
  	
- 	<!-- cette partie sera visible sur grand ecran et remplacée par une navbar bootstrap -->
+ 	<!-- cette partie sera visible sur grand ecran et remplacï¿½e par une navbar bootstrap -->
  	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 header row">
  		
  		<div class="logo col-lg-4 col-md-4 col-sm-4">
@@ -152,7 +152,7 @@
 				&nbsp; 		
 	 		</div>
 	 		<!-- CARIOUSSEL -->
-	        <div class=" slider nozoom row">
+	        <div class=" slider zoom row">
 	        
 	            <img src="/bundles/manuasgtt/images/ASGTT-Logo_page_web.png" width="100%" style="width: 100%"/>
 	             <img src="/bundles/manuasgtt/images/test.jpg" width="100%" style="width: 100%"/>
@@ -164,10 +164,22 @@
 	 		{% if articles is defined %}
 	 			{% for article in articles %}
 	 				
-	 				<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1 articles ">
-	 					<span class="titre_article col-lg-12 col-md-12 col-sm-12 col-xs-12">{{ article.titre }}</span> <br/>
-	 					<span class="content_article col-lg-12 col-md-12 col-sm-12 col-xs-12">&nbsp;&nbsp;&nbsp;&nbsp;{{ article.contenu }}</span>
-	 				</div>
+                    <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1 articles " article_id="{{article.id}}">
+                         {% if is_admin() %} 
+                             <button type="button" class="btn btn-default button_remove" aria-label="Left Align">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                             </button>
+                              <span class="titre_article col-lg-12 col-md-12 col-sm-12 col-xs-12">{{ article.titre }}</span> <br/>
+                              <span class="content_article col-lg-12 col-md-12 col-sm-12 col-xs-12">&nbsp;&nbsp;&nbsp;&nbsp;{{ article.contenu|raw }}</span>
+	 							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                              	<button class="col-lg-3 col-md-3 col-sm-6 col-xs-6 col-lg-offset-1 col-md-offset-1 button_update">Modifier</button>
+                              </div>
+                          {% else %}
+                          	  <span class="titre_article col-lg-12 col-md-12 col-sm-12 col-xs-12">{{ article.titre }}</span> <br/>
+                                  <span class="content_article col-lg-12 col-md-12 col-sm-12 col-xs-12">&nbsp;&nbsp;&nbsp;&nbsp;{{ article.contenu|raw }}</span>
+                         {% endif %}
+                                                
+	 					</div>
 	 			{% endfor %}
 	 		{% endif %}
 	 		</div>

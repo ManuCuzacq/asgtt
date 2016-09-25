@@ -126,7 +126,6 @@ class ASGTTExtension extends \Twig_Extension {
     	if (false) $secuManager = new SecurityManager();
     	
     	return $secuManager->isAdmin();
-
     }
     
     public function isJoueur(){

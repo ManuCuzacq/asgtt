@@ -206,6 +206,9 @@ body {
 
 .accueil .content {
 	background-image:url(/bundles/manuasgtt/images/ASGTT-Fond_photo_accueil.jpg);
+	width: 90%;
+	margin-left: 5%;
+	box-shadow: black 5px 3px 20px;
 
 }
 .contact .content {
@@ -242,6 +245,7 @@ body {
 	padding: 5px;
 	box-shadow: 1px 1px 20px #0a0a0a;
 	max-width: 1180px;
+	margin-top: 80px;
 }
 
 .liste_articles > .articles > .titre_article {
@@ -275,10 +279,10 @@ body {
 .page_photos .loading,
 .page_compteur .loading,
 .page_membres .loading,
-.page_accueil .loading {
-	pointer-events: none;
+.accueil .loading {
+    pointer-events: none;
     cursor: default;
-	background: url(/bundles/manuasgtt/images/loader.gif) center center no-repeat;	
+    background: url(/bundles/manuasgtt/images/loader.gif) center center no-repeat;	
 }
 
 
@@ -291,7 +295,7 @@ body {
 .page_photos .loading > * ,
 .page_compteur .loading > *, 
 .page_membres .loading > *, 
-.page_accueil .loading > * {
+.accueil .loading > * {
 	opacity: .4;
 }
 
@@ -304,7 +308,7 @@ body {
 .page_photos .loading .button,
 .page_compteur .loading .button,
 .page_membres .loading .button,
-.page_accueil .loading .button{
+.accueil .loading .button{
 	visibility: hidden;
 }
 
@@ -362,6 +366,12 @@ body {
 .accueil .footer{
 	opacity: 1
 }
+
+.button .update {
+	color: #fff;
+	background: #008CBA;
+	border-radius: 3px;	
+}
 /* Small devices (767px and down) */
 @media (max-width: 767px) {
 	.page {
@@ -383,8 +393,29 @@ body {
 		margin-top: 0;
 	}
 }
-	
-/* Small devices (768px and up) */
+
+.articles .button_remove{
+    float: right;
+    background: #d9534f;
+    border: 1px solid black;
+}
+
+.articles .button_update{
+    float: right;
+    background: #025573;
+    border: none;
+    color: white;
+    font-size: 20px;
+}
+
+.articles .button_update:hover {
+    color:#025573;
+    background: white;
+    -webkit-transition: ease 0.3s; /* Safari */
+    transition: ease 0.3s;
+    border-radius: 15px;
+} 
+/*Small devices (768px and up) */
 @media (min-width: 768px) {
 	
 	.navbar {

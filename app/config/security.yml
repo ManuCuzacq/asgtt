@@ -4,8 +4,7 @@
 imports: 
   - { resource: "@ManuUserBundle/Resources/config/security.yml" }
   
-
-         
+           
 security:
    
     role_hierarchy:

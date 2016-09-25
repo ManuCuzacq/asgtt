@@ -2,6 +2,8 @@
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Manu\UserBundle\SerielUserBundle;
+use P2\Bundle\RatchetBundle\P2RatchetBundle;
 
 class AppKernel extends Kernel
 {
@@ -16,9 +18,12 @@ class AppKernel extends Kernel
         	new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
+			new Liip\ImagineBundle\LiipImagineBundle(),
             new Manu\AsgttBundle\ManuAsgttBundle(),
             new Manu\UserBundle\ManuUserBundle(),
-        	new FOS\UserBundle\FOSUserBundle(),
+            new P2RatchetBundle(),
+        	
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

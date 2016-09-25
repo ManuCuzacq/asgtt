@@ -73,10 +73,59 @@ assetic:
     use_controller: false
     filters:
         cssrewrite: ~
-        
-        
-# FOSUserBundle Configuration       
+               
+# FOS
 fos_user:
-    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    db_driver: orm
     firewall_name: main
     user_class: Manu\UserBundle\Entity\User
+    
+p2_ratchet:
+    provider: security_manager     # The client provider to use, null for default
+    address: 0.0.0.0        # The address to receive sockets on (0.0.0.0 means receive from any)
+    port: 8123              # The port the socket server will listen on
+
+services:
+  controller.pre_execute_listener:
+    class: Manu\AsgttBundle\Listener\ControllerListener
+    tags:
+      -  { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
+      
+      
+liip_imagine:
+    driver: imagick
+    cache: default
+
+    resolvers:
+        default:
+            web_path:
+                web_root: "%kernel.root_dir%/../web"
+                cache_prefix: public/cache
+    loaders:
+        default:
+            filesystem: ~ 
+    filter_sets:
+        driver: ~
+        cache: ~
+        thumbnail:
+            data_loader: default
+            quality: 85
+            filters:
+                thumbnail: { size: [120, 120], mode: inset }
+        slider:
+            data_loader: default
+            quality: 90
+            filters:
+                relative_resize: { widen: 2000 }
+        catalogue:
+            data_loader: default
+            quality: 95
+            filters:
+                thumbnail: { size: [350, 350], mode: inset }
+        article:
+            data_loader: default
+            quality: 95
+            filters:
+                thumbnail: { size: [800, 800], mode: inset }
+
+    

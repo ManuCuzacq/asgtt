@@ -1,0 +1,30 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+    <h1>Administration du site</h1>
+<div>
+		test
+        {% if error %}
+            <div class="error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            <br/>
+        {% endif %}
+        <form action="{{ path("fos_user_security_check") }}" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+
+            <input type="text" id="username" class="identifiant col-lg-12 col-md-12 col-sm-12 col-xs-12" name="_username" value="{{ last_username }}" placeholder="Identifiant" required="required" />
+            <input type="password" id="password" class="pwd col-lg-12 col-md-12 col-sm-12 col-xs-12" name="_password" placeholder="Mot de passe" required="required" />
+    
+            <input type="hidden" id="hash" name="_hash" />
+
+            <!-- <input type="checkbox" id="remember_me" name="_remember_me" value="on" /> 
+            <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label><br/>-->
+
+            <input type="submit" id="_submit" name="_submit" style="display: none" value="{{ 'security.login.submit'|trans }}" /><br/>
+        </form>
+        </div>
+        <span class="button col-lg-12 col-md-12 col-sm-12 col-xs-12">Se connecter</span>
+</div>
+    
+{% endblock fos_user_content %}

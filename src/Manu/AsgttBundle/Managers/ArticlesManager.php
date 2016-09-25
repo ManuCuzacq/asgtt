@@ -19,12 +19,6 @@ class ArticlesManager extends SerielManager
 	protected function buildQuery($qb, $params, $options = null) {
 		$hasParams = false;
 			
-		/*if (isset($params['nom']) and $params['nom']) {
-			$nom = $params['nom'];
-			$qb->andWhere('article.nom = :nom')->setParameter('nom', $nom);
-			$hasParams = true;
-		}*/
-	
 		return $hasParams;
 	}
 	
@@ -44,25 +38,7 @@ class ArticlesManager extends SerielManager
 
 		return $articles;
 	}
-	
-	
-	/**
-	 * @return Articles
-	 */
-	public function getArticleForName($name) {
-		$params = array('nom' => $name);
-	
-		return $this->query($params, array('one' => true));
-	}
-	
-	
-	/*public function save($obj, $flush = false) {
-		if ($obj instanceof Article) {
-			$obj->setEmpty($obj->isEpuise());
-		}
-	
-		return parent::save($obj, $flush);
-	}*/
+
 }
 
 ?>

@@ -279,10 +279,10 @@ body {
 .page_photos .loading,
 .page_compteur .loading,
 .page_membres .loading,
-.accueil .loading {
-    pointer-events: none;
+.page_accueil .loading {
+	pointer-events: none;
     cursor: default;
-    background: url(/bundles/manuasgtt/images/loader.gif) center center no-repeat;	
+	background: url(/bundles/manuasgtt/images/loader.gif) center center no-repeat;	
 }
 
 
@@ -295,7 +295,7 @@ body {
 .page_photos .loading > * ,
 .page_compteur .loading > *, 
 .page_membres .loading > *, 
-.accueil .loading > * {
+.page_accueil .loading > * {
 	opacity: .4;
 }
 
@@ -308,7 +308,7 @@ body {
 .page_photos .loading .button,
 .page_compteur .loading .button,
 .page_membres .loading .button,
-.accueil .loading .button{
+.page_accueil .loading .button{
 	visibility: hidden;
 }
 
@@ -397,25 +397,13 @@ body {
 .articles .button_remove{
     float: right;
     background: #d9534f;
-    border: 1px solid black;
 }
 
 .articles .button_update{
     float: right;
     background: #025573;
-    border: none;
-    color: white;
-    font-size: 20px;
 }
-
-.articles .button_update:hover {
-    color:#025573;
-    background: white;
-    -webkit-transition: ease 0.3s; /* Safari */
-    transition: ease 0.3s;
-    border-radius: 15px;
-} 
-/*Small devices (768px and up) */
+/* Small devices (768px and up) */
 @media (min-width: 768px) {
 	
 	.navbar {

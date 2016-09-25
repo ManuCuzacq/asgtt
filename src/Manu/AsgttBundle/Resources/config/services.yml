@@ -3,8 +3,13 @@ services:
         class: Manu\AsgttBundle\Twig\ASGTTExtension
         arguments:  ["@request_stack","@service_container"]
         tags:
-            - { name: twig.extension }
-            
+            - { name: twig.extension }    
+  security.access.main_voter:
+        class:      Manu\AsgttBundle\Security\Voters\AnyVoter
+        public:     false
+        arguments: ["@service_container"]
+        tags:
+            - { name: security.voter }       
   articles_manager:
         class: Manu\AsgttBundle\Managers\ArticlesManager
         arguments: ["@doctrine", "@logger", "@service_container"]
@@ -57,3 +62,5 @@ services:
   security_manager:
         class: Manu\AsgttBundle\Managers\SecurityManager
         arguments: ["@service_container", "@doctrine", "@templating", "@logger"]
+        
+  
